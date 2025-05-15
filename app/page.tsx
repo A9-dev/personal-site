@@ -1,29 +1,71 @@
 import { Victor_Mono } from "next/font/google";
 import ForceGraph from "@/app/components/ForceGraph";
-const graphData = {
-  nodes: [
+
+type Node = {
+  id: number;
+  name: string;
+};
+
+type Link = {
+  source: number;
+  target: number;
+};
+
+type GraphData = {
+  nodes: Node[];
+  links: Link[];
+};
+
+const buckets: Record<string, Node[]> = {
+  frontend: [
     { id: 0, name: "JavaScript" },
     { id: 1, name: "TypeScript" },
-    { id: 2, name: "React" },
-    { id: 3, name: "Angular" },
-    { id: 4, name: "Vue" },
-    { id: 5, name: "Node.js" },
-    { id: 6, name: "Python" },
-    { id: 7, name: "Django" },
-    { id: 8, name: "Flask" },
-    { id: 9, name: "Ruby" },
-    { id: 10, name: "Rails" },
+    { id: 2, name: "Next.js" },
+    { id: 13, name: "Tailwind CSS" },
+    { id: 14, name: "Vite" },
+    { id: 16, name: "Jest" },
   ],
-  links: [
-    { source: 0, target: 1 },
-    { source: 0, target: 2 },
-    { source: 0, target: 3 },
-    { source: 0, target: 4 },
-    { source: 0, target: 5 },
-    { source: 6, target: 7 },
-    { source: 6, target: 8 },
-    { source: 9, target: 10 },
+  backend: [
+    { id: 3, name: "Rust" },
+    { id: 4, name: "Java" },
+    { id: 5, name: "PostgreSQL" },
+    { id: 6, name: "MongoDB" },
+    { id: 9, name: "Python" },
   ],
+  devops: [
+    { id: 7, name: "Azure" },
+    { id: 8, name: "AWS" },
+    { id: 11, name: "Docker" },
+    { id: 12, name: "Linux" },
+  ],
+  tooling: [
+    { id: 10, name: "Git" },
+    { id: 15, name: "GitHub" },
+  ],
+};
+
+const nodes: Node[] = [
+  ...buckets.frontend,
+  ...buckets.backend,
+  ...buckets.devops,
+  ...buckets.tooling,
+];
+
+const links: Link[] = [];
+
+function connectFullyWithinBucket(bucket: Node[]): void {
+  for (let i = 0; i < bucket.length; i++) {
+    for (let j = i + 1; j < bucket.length; j++) {
+      links.push({ source: bucket[i].id, target: bucket[j].id });
+    }
+  }
+}
+
+Object.values(buckets).forEach(connectFullyWithinBucket);
+
+export const graphData: GraphData = {
+  nodes,
+  links,
 };
 
 const victorMono = Victor_Mono({
