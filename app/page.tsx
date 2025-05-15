@@ -1,3 +1,4 @@
+import { Victor_Mono } from "next/font/google";
 import ForceGraph from "@/app/components/ForceGraph";
 const graphData = {
   nodes: [
@@ -25,12 +26,23 @@ const graphData = {
   ],
 };
 
+const victorMono = Victor_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+});
+
 export default function Home() {
   return (
     <div className="flex h-screen">
-      <div className="flex flex-col justify-center items-end pr-10 border-r border-black w-1/2 h-1/2 self-center">
+      <div className="flex flex-col justify-center items-end px-20 border-r border-black w-1/2 h-3/4 self-center">
         <p className="text-vertical text-right transform origin-bottom-left">
-          Henry Pearson
+          <span className={`${victorMono.className} text-[80px] leading-none`}>
+            HENRY
+          </span>
+          <br />
+          <span className={`${victorMono.className} text-[80px] leading-none`}>
+            PEARSON
+          </span>
         </p>
       </div>
       <div className="flex justify-center items-center w-1/2 h-full">
