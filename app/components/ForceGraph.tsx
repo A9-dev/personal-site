@@ -66,7 +66,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
         d3
           .forceLink<Node, Link>(links)
           .id((d) => d.id)
-          .distance(120)
+          .distance(180)
       )
       .force("charge", d3.forceManyBody().strength(-90))
       .force("center", d3.forceCenter(width / 2, height / 2));
@@ -89,7 +89,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .data(nodes)
       .enter()
       .append("circle")
-      .attr("r", 15)
+      .attr("r", 30)
       .attr("fill", "#69b3a2")
       .call(drag(simulation));
 
@@ -105,7 +105,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .attr("dy", 4);
 
     simulation.on("tick", () => {
-      const radius = 15; // node radius
+      const radius = 30; // node radius
 
       nodes.forEach((d) => {
         // Clamp node position within bounds
