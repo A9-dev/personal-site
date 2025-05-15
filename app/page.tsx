@@ -4,6 +4,7 @@ import ForceGraph from "@/app/components/ForceGraph";
 type Node = {
   id: number;
   name: string;
+  icon: string;
 };
 
 type Link = {
@@ -18,29 +19,29 @@ type GraphData = {
 
 const buckets: Record<string, Node[]> = {
   frontend: [
-    { id: 0, name: "JavaScript" },
-    { id: 1, name: "TypeScript" },
-    { id: 2, name: "Next.js" },
-    { id: 13, name: "Tailwind CSS" },
-    { id: 14, name: "Vite" },
-    { id: 16, name: "Jest" },
+    { id: 0, name: "JavaScript", icon: "/icons/javascript.svg" },
+    { id: 1, name: "TypeScript", icon: "/icons/typescript.svg" },
+    { id: 2, name: "Next.js", icon: "/icons/nextjs.svg" },
+    { id: 13, name: "Tailwind CSS", icon: "/icons/tailwind.svg" },
+    { id: 14, name: "Vite", icon: "/icons/vite.svg" },
+    { id: 16, name: "Jest", icon: "/icons/jest.svg" },
   ],
   backend: [
-    { id: 3, name: "Rust" },
-    { id: 4, name: "Java" },
-    { id: 5, name: "PostgreSQL" },
-    { id: 6, name: "MongoDB" },
-    { id: 9, name: "Python" },
+    { id: 3, name: "Rust", icon: "/icons/rust.svg" },
+    { id: 4, name: "Java", icon: "/icons/java.svg" },
+    { id: 5, name: "PostgreSQL", icon: "/icons/postgresql.svg" },
+    { id: 6, name: "MongoDB", icon: "/icons/mongodb.svg" },
+    { id: 9, name: "Python", icon: "/icons/python.svg" },
   ],
   devops: [
-    { id: 7, name: "Azure" },
-    { id: 8, name: "AWS" },
-    { id: 11, name: "Docker" },
-    { id: 12, name: "Linux" },
+    { id: 7, name: "Azure", icon: "/icons/azure.svg" },
+    { id: 8, name: "AWS", icon: "/icons/aws.svg" },
+    { id: 11, name: "Docker", icon: "/icons/docker.svg" },
+    { id: 12, name: "Linux", icon: "/icons/linux.svg" },
   ],
   tooling: [
-    { id: 10, name: "Git" },
-    { id: 15, name: "GitHub" },
+    { id: 10, name: "Git", icon: "/icons/git.svg" },
+    { id: 15, name: "GitHub", icon: "/icons/github.svg" },
   ],
 };
 

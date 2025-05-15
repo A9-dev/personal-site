@@ -6,6 +6,7 @@ import * as d3 from "d3";
 interface Node {
   id: number;
   name: string;
+  icon: string;
   x?: number;
   y?: number;
   vx?: number;
@@ -27,13 +28,7 @@ interface ForceGraphProps {
 const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  }>({
-    width: 800,
-    height: 600,
-  });
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -46,10 +41,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     });
 
     resizeObserver.observe(wrapperRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
+    return () => resizeObserver.disconnect();
   }, []);
 
   useEffect(() => {
@@ -81,36 +73,25 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .append("line")
       .attr("stroke-width", 2);
 
+    const iconSize = 60;
+
     const node = svg
       .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1.5)
-      .selectAll("circle")
+      .selectAll("image")
       .data(nodes)
       .enter()
-      .append("circle")
-      .attr("r", 30)
-      .attr("fill", "#69b3a2")
+      .append("image")
+      .attr("xlink:href", (d) => d.icon)
+      .attr("width", iconSize)
+      .attr("height", iconSize)
+      .attr("x", (d) => (d.x ?? 0) - iconSize / 2)
+      .attr("y", (d) => (d.y ?? 0) - iconSize / 2)
       .call(drag(simulation));
 
-    const label = svg
-      .append("g")
-      .selectAll("text")
-      .data(nodes)
-      .enter()
-      .append("text")
-      .text((d) => d.name)
-      .attr("font-size", 12)
-      .attr("dx", 18)
-      .attr("dy", 4);
-
     simulation.on("tick", () => {
-      const radius = 30; // node radius
-
       nodes.forEach((d) => {
-        // Clamp node position within bounds
-        d.x = Math.max(radius, Math.min(dimensions.width - radius, d.x!));
-        d.y = Math.max(radius, Math.min(dimensions.height - radius, d.y!));
+        d.x = Math.max(iconSize / 2, Math.min(width - iconSize / 2, d.x!));
+        d.y = Math.max(iconSize / 2, Math.min(height - iconSize / 2, d.y!));
       });
 
       link
@@ -119,13 +100,14 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
         .attr("x2", (d) => (d.target as Node).x!)
         .attr("y2", (d) => (d.target as Node).y!);
 
-      node.attr("cx", (d) => d.x!).attr("cy", (d) => d.y!);
-      label.attr("x", (d) => d.x!).attr("y", (d) => d.y!);
+      node
+        .attr("x", (d) => d.x! - iconSize / 2)
+        .attr("y", (d) => d.y! - iconSize / 2);
     });
 
     function drag(sim: d3.Simulation<Node, Link>) {
       function dragstarted(
-        event: d3.D3DragEvent<SVGCircleElement, Node, Node>,
+        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
         d: Node
       ) {
         if (!event.active) sim.alphaTarget(0.3).restart();
@@ -134,7 +116,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       function dragged(
-        event: d3.D3DragEvent<SVGCircleElement, Node, Node>,
+        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
         d: Node
       ) {
         d.fx = event.x;
@@ -142,7 +124,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       function dragended(
-        event: d3.D3DragEvent<SVGCircleElement, Node, Node>,
+        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
         d: Node
       ) {
         if (!event.active) sim.alphaTarget(0);
@@ -151,7 +133,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       return d3
-        .drag<SVGCircleElement, Node>()
+        .drag<SVGImageElement, Node>()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended);
