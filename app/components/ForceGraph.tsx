@@ -73,42 +73,75 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .append("line")
       .attr("stroke-width", 2);
 
-    const iconSize = 60;
+    const iconSize = 40;
+    const nodeRadius = iconSize / 2 + 15;
 
-    const node = svg
+    const nodeGroup = svg
       .append("g")
-      .selectAll("image")
+      .selectAll("g")
       .data(nodes)
       .enter()
+      .append("g")
+      .call(drag(simulation));
+
+    nodeGroup
+      .append("circle")
+      .attr("r", nodeRadius)
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2);
+
+    nodeGroup
       .append("image")
       .attr("xlink:href", (d) => d.icon)
       .attr("width", iconSize)
       .attr("height", iconSize)
-      .attr("x", (d) => (d.x ?? 0) - iconSize / 2)
-      .attr("y", (d) => (d.y ?? 0) - iconSize / 2)
-      .attr("class", "tech-icon")
-      .call(drag(simulation));
+      .attr("x", -iconSize / 2)
+      .attr("y", -iconSize / 2)
+      .attr("class", "tech-icon");
 
     simulation.on("tick", () => {
       nodes.forEach((d) => {
-        d.x = Math.max(iconSize / 2, Math.min(width - iconSize / 2, d.x!));
-        d.y = Math.max(iconSize / 2, Math.min(height - iconSize / 2, d.y!));
+        d.x = Math.max(nodeRadius, Math.min(width - nodeRadius, d.x!));
+        d.y = Math.max(nodeRadius, Math.min(height - nodeRadius, d.y!));
       });
 
       link
-        .attr("x1", (d) => (d.source as Node).x!)
-        .attr("y1", (d) => (d.source as Node).y!)
-        .attr("x2", (d) => (d.target as Node).x!)
-        .attr("y2", (d) => (d.target as Node).y!);
+        .attr("x1", (d) => {
+          const dx = (d.target as Node).x! - (d.source as Node).x!;
+          const dy = (d.target as Node).y! - (d.source as Node).y!;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offsetX = (dx * nodeRadius) / dist;
+          return (d.source as Node).x! + offsetX;
+        })
+        .attr("y1", (d) => {
+          const dx = (d.target as Node).x! - (d.source as Node).x!;
+          const dy = (d.target as Node).y! - (d.source as Node).y!;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offsetY = (dy * nodeRadius) / dist;
+          return (d.source as Node).y! + offsetY;
+        })
+        .attr("x2", (d) => {
+          const dx = (d.source as Node).x! - (d.target as Node).x!;
+          const dy = (d.source as Node).y! - (d.target as Node).y!;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offsetX = (dx * nodeRadius) / dist;
+          return (d.target as Node).x! + offsetX;
+        })
+        .attr("y2", (d) => {
+          const dx = (d.source as Node).x! - (d.target as Node).x!;
+          const dy = (d.source as Node).y! - (d.target as Node).y!;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const offsetY = (dy * nodeRadius) / dist;
+          return (d.target as Node).y! + offsetY;
+        });
 
-      node
-        .attr("x", (d) => d.x! - iconSize / 2)
-        .attr("y", (d) => d.y! - iconSize / 2);
+      nodeGroup.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
     function drag(sim: d3.Simulation<Node, Link>) {
       function dragstarted(
-        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
+        event: d3.D3DragEvent<SVGGElement, Node, Node>,
         d: Node
       ) {
         if (!event.active) sim.alphaTarget(0.3).restart();
@@ -117,7 +150,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       function dragged(
-        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
+        event: d3.D3DragEvent<SVGGElement, Node, Node>,
         d: Node
       ) {
         d.fx = event.x;
@@ -125,7 +158,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       function dragended(
-        event: d3.D3DragEvent<SVGImageElement, Node, Node>,
+        event: d3.D3DragEvent<SVGGElement, Node, Node>,
         d: Node
       ) {
         if (!event.active) sim.alphaTarget(0);
@@ -134,7 +167,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       }
 
       return d3
-        .drag<SVGImageElement, Node>()
+        .drag<SVGGElement, Node>()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended);
