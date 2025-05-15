@@ -28,6 +28,7 @@ interface ForceGraphProps {
 const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const latestMousePos = useRef<{ x: number; y: number } | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
@@ -50,6 +51,21 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     const { width, height } = dimensions;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
+
+    // Create tooltip div
+    const tooltip = d3
+      .select(wrapperRef.current)
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+      .style("position", "absolute")
+      .style("pointer-events", "none")
+      .style("background-color", "white")
+      .style("border", "1px solid #ddd")
+      .style("border-radius", "4px")
+      .style("padding", "8px")
+      .style("font-size", "14px")
+      .style("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
 
     const simulation = d3
       .forceSimulation<Node>(nodes)
@@ -75,14 +91,49 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
 
     const iconSize = 40;
     const nodeRadius = iconSize / 2 + 15;
-
+    let hoverTimeout: NodeJS.Timeout | null = null;
     const nodeGroup = svg
       .append("g")
       .selectAll("g")
       .data(nodes)
       .enter()
       .append("g")
-      .call(drag(simulation));
+      .call(drag(simulation))
+      .on("mouseover", (event, d) => {
+        latestMousePos.current = { x: event.clientX, y: event.clientY };
+        hoverTimeout = setTimeout(() => {
+          if (!latestMousePos.current) return;
+          const wrapperRect = wrapperRef.current!.getBoundingClientRect();
+
+          tooltip
+            .style("opacity", 1)
+            .html(`<strong>${d.name}</strong>`)
+            .style(
+              "left",
+              `${latestMousePos.current.x - wrapperRect.left + 10}px`
+            )
+            .style(
+              "top",
+              `${latestMousePos.current.y - wrapperRect.top - 20}px`
+            );
+        }, 1000);
+      })
+      .on("mousemove", (event) => {
+        latestMousePos.current = { x: event.clientX, y: event.clientY };
+        const wrapperRect = wrapperRef.current!.getBoundingClientRect();
+
+        tooltip
+          .style("left", `${event.clientX - wrapperRect.left + 10}px`)
+          .style("top", `${event.clientY - wrapperRect.top - 20}px`);
+      })
+      .on("mouseout", () => {
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+          hoverTimeout = null;
+        }
+        latestMousePos.current = null;
+        tooltip.style("opacity", 0);
+      });
 
     nodeGroup
       .append("circle")
@@ -172,10 +223,18 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
         .on("drag", dragged)
         .on("end", dragended);
     }
+
+    // Clean up tooltip when component unmounts
+    return () => {
+      tooltip.remove();
+    };
   }, [nodes, links, dimensions]);
 
   return (
-    <div ref={wrapperRef} style={{ width: "95%", height: "75%" }}>
+    <div
+      ref={wrapperRef}
+      style={{ width: "95%", height: "75%", position: "relative" }}
+    >
       <svg
         ref={svgRef}
         width={dimensions.width}
