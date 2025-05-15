@@ -86,6 +86,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .attr("height", iconSize)
       .attr("x", (d) => (d.x ?? 0) - iconSize / 2)
       .attr("y", (d) => (d.y ?? 0) - iconSize / 2)
+      .attr("class", "tech-icon")
       .call(drag(simulation));
 
     simulation.on("tick", () => {
@@ -141,7 +142,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
   }, [nodes, links, dimensions]);
 
   return (
-    <div ref={wrapperRef} style={{ width: "80%", height: "50%" }}>
+    <div ref={wrapperRef} style={{ width: "95%", height: "75%" }}>
       <svg
         ref={svgRef}
         width={dimensions.width}
