@@ -98,7 +98,6 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .data(nodes)
       .enter()
       .append("g")
-      .call(drag(simulation))
       .on("mouseover", (event, d) => {
         latestMousePos.current = { x: event.clientX, y: event.clientY };
         hoverTimeout = setTimeout(() => {
@@ -138,9 +137,12 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     nodeGroup
       .append("circle")
       .attr("r", nodeRadius)
-      .attr("fill", "none")
+      .attr("fill", "transparent")
       .attr("stroke", "black")
       .attr("stroke-width", 2);
+
+    // Attach drag to the entire node group
+    nodeGroup.call(drag(simulation));
 
     nodeGroup
       .append("image")
