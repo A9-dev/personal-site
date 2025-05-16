@@ -1,5 +1,13 @@
+"use client";
+
 import { Victor_Mono } from "next/font/google";
 import ForceGraph from "@/app/components/ForceGraph";
+import DateTime from "./components/DateTime";
+
+const victorMono = Victor_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+});
 
 type Node = {
   id: number;
@@ -69,11 +77,6 @@ const graphData: GraphData = {
   links,
 };
 
-const victorMono = Victor_Mono({
-  subsets: ["latin"],
-  weight: ["500"],
-});
-
 export default function Home() {
   return (
     <div className="relative h-screen">
@@ -97,19 +100,13 @@ export default function Home() {
           <ForceGraph nodes={graphData.nodes} links={graphData.links} />
         </div>
       </div>
-      <div className={`${victorMono.className} absolute top-0 left-0 p-4`}>
-        {new Date().toISOString()}
-      </div>
 
+      <DateTime className="absolute top-0 left-0 p-4 font-victor-mono" />
+
+      {/* Status bar */}
       <div className={`${victorMono.className} absolute bottom-0 left-0 p-4`}>
-        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-        <span
-          style={{
-            fontWeight: "bold",
-            verticalAlign: "middle",
-          }}
-        >
-          //&nbsp;
+        <span style={{ fontWeight: "bold", verticalAlign: "middle" }}>
+          {"//"}&nbsp;
         </span>
         <span
           style={{
@@ -121,50 +118,21 @@ export default function Home() {
           STATUS: ONLINE
         </span>
         <span className="inline-block ml-1 w-[1.2em] h-[1.2em] bg-green-400 align-middle" />
-        <span
-          className="inline-block w-[0.6em] h-[1.2em] align-middle"
-          style={{
-            backgroundImage: `
-            repeating-conic-gradient(
-        #05df72 0% 25%, 
-        transparent 0% 50%
-            )`,
-            backgroundSize: "4px 4px",
-          }}
-        />
-        <span
-          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-50"
-          style={{
-            backgroundImage: `
-            repeating-conic-gradient(
-        #05df72 0% 25%, 
-        transparent 0% 50%
-            )`,
-            backgroundSize: "4px 4px",
-          }}
-        />
-        <span
-          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-25"
-          style={{
-            backgroundImage: `
-            repeating-conic-gradient(
-        #05df72 0% 25%, 
-        transparent 0% 50%
-            )`,
-            backgroundSize: "4px 4px",
-          }}
-        />
-        <span
-          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-10"
-          style={{
-            backgroundImage: `
-          repeating-conic-gradient(
-      #05df72 0% 25%, 
-      transparent 0% 50%
-          )`,
-            backgroundSize: "4px 4px",
-          }}
-        />
+        {[1, 0.5, 0.25, 0.1].map((opacity, i) => (
+          <span
+            key={i}
+            className="inline-block w-[0.6em] h-[1.2em] align-middle"
+            style={{
+              opacity,
+              backgroundImage: `
+              repeating-conic-gradient(
+                #05df72 0% 25%, 
+                transparent 0% 50%
+              )`,
+              backgroundSize: "4px 4px",
+            }}
+          />
+        ))}
       </div>
     </div>
   );

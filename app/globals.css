@@ -26,3 +26,27 @@ body {
 .tech-icon:hover {
   filter: none;
 }
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInAnimation 0.5s forwards;
+}
+
+@keyframes fadeInAnimation {
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-slide-down {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInSlideDownAnimation 0.5s forwards;
+}
+
+@keyframes fadeInSlideDownAnimation {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
