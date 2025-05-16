@@ -146,12 +146,12 @@ export default function Home() {
       <svg className="absolute bottom-0 left-0 w-full h-screen pointer-events-none">
         <path
           d={`
-      M 0 ${dimensions.height - 120}
-      L 300 ${dimensions.height - 120}
-      Q 320 ${dimensions.height - 120} 330 ${dimensions.height - 100}
-      L 350 ${dimensions.height - 60}
-      Q 360 ${dimensions.height - 40} 380 ${dimensions.height - 40}
-      L ${dimensions.width} ${dimensions.height - 40}
+      M 0 ${dimensions.height - 90}
+      L 300 ${dimensions.height - 90}
+      Q 320 ${dimensions.height - 90} 330 ${dimensions.height - 70}
+      L 340 ${dimensions.height - 50}
+      Q 350 ${dimensions.height - 30} 370 ${dimensions.height - 30}
+      L ${dimensions.width} ${dimensions.height - 30}
           `}
           fill="none"
           stroke="#000000"
@@ -160,7 +160,7 @@ export default function Home() {
       </svg>
 
       {/* Status bar */}
-      <div className={`${victorMono.className} absolute bottom-0 left-0 p-4`}>
+      <div className={`${victorMono.className} absolute bottom-5 left-0 p-4`}>
         <span style={{ fontWeight: "bold", verticalAlign: "middle" }}>
           {"//"}&nbsp;
         </span>
