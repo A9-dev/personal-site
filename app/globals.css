@@ -75,11 +75,21 @@ body {
 }
 
 @keyframes flashingText {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
     opacity: 0.3;
+  }
+}
+
+@keyframes dashOffset {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -8;
   }
 }
 

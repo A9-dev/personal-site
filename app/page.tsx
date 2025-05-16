@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Victor_Mono } from "next/font/google";
 import ForceGraph from "@/app/components/ForceGraph";
 import DateTime from "./components/DateTime";
@@ -99,6 +100,21 @@ const graphData: GraphData = {
 };
 
 export default function Home() {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
   return (
     <div className="relative h-screen">
       <div className="flex h-full">
@@ -125,6 +141,23 @@ export default function Home() {
       <DateTime
         className={`absolute top-0 left-0 p-4 ${victorMono.className}`}
       />
+
+      {/* PCB Line */}
+      <svg className="absolute bottom-0 left-0 w-full h-screen pointer-events-none">
+        <path
+          d={`
+      M 0 ${dimensions.height - 120}
+      L 300 ${dimensions.height - 120}
+      Q 320 ${dimensions.height - 120} 330 ${dimensions.height - 100}
+      L 350 ${dimensions.height - 60}
+      Q 360 ${dimensions.height - 40} 380 ${dimensions.height - 40}
+      L ${dimensions.width} ${dimensions.height - 40}
+          `}
+          fill="none"
+          stroke="#000000"
+          strokeWidth="1"
+        />
+      </svg>
 
       {/* Status bar */}
       <div className={`${victorMono.className} absolute bottom-0 left-0 p-4`}>
