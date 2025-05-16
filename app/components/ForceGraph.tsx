@@ -281,9 +281,14 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
           height: "100%",
           background: "#f8f8f8",
           animation: "fadeOutCover 0.5s ease-out forwards",
-          animationDelay: "1s",
+          animationDelay: "0.5s",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      />
+      >
+        <div className="loading-text">TECH LOADING...</div>
+      </div>
     </div>
   );
 };
