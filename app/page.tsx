@@ -105,13 +105,13 @@ export default function Home() {
         <div className="flex flex-col justify-center items-end px-20 border-r border-black w-1/2 h-3/4 self-center">
           <p className="text-vertical text-right transform origin-bottom-left">
             <span
-              className={`${victorMono.className} text-[80px] leading-none`}
+              className={`${victorMono.className} text-[80px] leading-none name-text inline-block`}
             >
               HENRY
             </span>
             <br />
             <span
-              className={`${victorMono.className} text-[80px] leading-none`}
+              className={`${victorMono.className} text-[80px] leading-none name-text inline-block`}
             >
               PEARSON
             </span>
