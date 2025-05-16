@@ -101,7 +101,9 @@ export default function Home() {
         </div>
       </div>
 
-      <DateTime className="absolute top-0 left-0 p-4 font-victor-mono" />
+      <DateTime
+        className={`absolute top-0 left-0 p-4 ${victorMono.className}`}
+      />
 
       {/* Status bar */}
       <div className={`${victorMono.className} absolute bottom-0 left-0 p-4`}>

@@ -34,5 +34,9 @@ export default function DateTime({ className = "" }: DateTimeProps) {
 
   const combinedClassName = `${className} fade-in-slide-down`.trim();
 
-  return <div className={combinedClassName}>DATETIME: {timeString}</div>;
+  return (
+    <div className={combinedClassName}>
+      <strong>DATETIME:</strong> {timeString}
+    </div>
+  );
 }
