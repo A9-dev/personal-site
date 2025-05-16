@@ -272,6 +272,18 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
         height={dimensions.height}
         style={{ display: "block" }}
       />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "#f8f8f8",
+          animation: "fadeOutCover 0.5s ease-out forwards",
+          animationDelay: "1s",
+        }}
+      />
     </div>
   );
 };

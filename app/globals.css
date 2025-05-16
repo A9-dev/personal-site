@@ -64,6 +64,16 @@ body {
   }
 }
 
+@keyframes fadeOutCover {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
 .name-text {
   animation: slideInFade 1s ease-out forwards;
   opacity: 0;
