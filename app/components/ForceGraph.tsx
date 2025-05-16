@@ -76,6 +76,17 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       tooling: { x: width * 0.75, y: height * 0.75 },
     };
 
+    // Initialize node positions around their group centers
+    nodes.forEach((node) => {
+      const center = groupPositions[node.group];
+      if (center) {
+        // Random offset from center (-50 to 50 pixels)
+        const randomOffset = () => (Math.random() - 0.5) * 100;
+        node.x = center.x + randomOffset();
+        node.y = center.y + randomOffset();
+      }
+    });
+
     const simulation = d3
       .forceSimulation<Node>(nodes)
       .force(
