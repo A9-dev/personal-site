@@ -13,6 +13,7 @@ type Node = {
   id: number;
   name: string;
   icon: string;
+  group: string;
 };
 
 type Link = {
@@ -27,29 +28,49 @@ type GraphData = {
 
 const buckets: Record<string, Node[]> = {
   frontend: [
-    { id: 0, name: "JavaScript", icon: "/icons/javascript.svg" },
-    { id: 1, name: "TypeScript", icon: "/icons/typescript.svg" },
-    { id: 2, name: "Next.js", icon: "/icons/nextjs.svg" },
-    { id: 13, name: "Tailwind CSS", icon: "/icons/tailwind.svg" },
-    { id: 14, name: "Vite", icon: "/icons/vite.svg" },
-    { id: 16, name: "Jest", icon: "/icons/jest.svg" },
+    {
+      id: 0,
+      name: "JavaScript",
+      icon: "/icons/javascript.svg",
+      group: "frontend",
+    },
+    {
+      id: 1,
+      name: "TypeScript",
+      icon: "/icons/typescript.svg",
+      group: "frontend",
+    },
+    { id: 2, name: "Next.js", icon: "/icons/nextjs.svg", group: "frontend" },
+    {
+      id: 13,
+      name: "Tailwind CSS",
+      icon: "/icons/tailwind.svg",
+      group: "frontend",
+    },
+    { id: 14, name: "Vite", icon: "/icons/vite.svg", group: "frontend" },
+    { id: 16, name: "Jest", icon: "/icons/jest.svg", group: "frontend" },
   ],
   backend: [
-    { id: 3, name: "Rust", icon: "/icons/rust.svg" },
-    { id: 4, name: "Java", icon: "/icons/java.svg" },
-    { id: 5, name: "PostgreSQL", icon: "/icons/postgresql.svg" },
-    { id: 6, name: "MongoDB", icon: "/icons/mongodb.svg" },
-    { id: 9, name: "Python", icon: "/icons/python.svg" },
+    { id: 3, name: "Rust", icon: "/icons/rust.svg", group: "backend" },
+    { id: 4, name: "Java", icon: "/icons/java.svg", group: "backend" },
+    {
+      id: 5,
+      name: "PostgreSQL",
+      icon: "/icons/postgresql.svg",
+      group: "backend",
+    },
+    { id: 6, name: "MongoDB", icon: "/icons/mongodb.svg", group: "backend" },
+    { id: 9, name: "Python", icon: "/icons/python.svg", group: "backend" },
   ],
   devops: [
-    { id: 7, name: "Azure", icon: "/icons/azure.svg" },
-    { id: 8, name: "AWS", icon: "/icons/aws.svg" },
-    { id: 11, name: "Docker", icon: "/icons/docker.svg" },
-    { id: 12, name: "Linux", icon: "/icons/linux.svg" },
+    { id: 7, name: "Azure", icon: "/icons/azure.svg", group: "devops" },
+    { id: 8, name: "AWS", icon: "/icons/aws.svg", group: "devops" },
+    { id: 11, name: "Docker", icon: "/icons/docker.svg", group: "devops" },
+    { id: 12, name: "Linux", icon: "/icons/linux.svg", group: "devops" },
   ],
   tooling: [
-    { id: 10, name: "Git", icon: "/icons/git.svg" },
-    { id: 15, name: "GitHub", icon: "/icons/github.svg" },
+    { id: 10, name: "Git", icon: "/icons/git.svg", group: "tooling" },
+    { id: 15, name: "GitHub", icon: "/icons/github.svg", group: "tooling" },
   ],
 };
 

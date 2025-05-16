@@ -7,6 +7,7 @@ interface Node {
   id: number;
   name: string;
   icon: string;
+  group: string;
   x?: number;
   y?: number;
   vx?: number;
@@ -67,6 +68,14 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .style("font-size", "14px")
       .style("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
 
+    // Group centers
+    const groupPositions: Record<string, { x: number; y: number }> = {
+      frontend: { x: width * 0.25, y: height * 0.25 },
+      backend: { x: width * 0.75, y: height * 0.25 },
+      devops: { x: width * 0.25, y: height * 0.75 },
+      tooling: { x: width * 0.75, y: height * 0.75 },
+    };
+
     const simulation = d3
       .forceSimulation<Node>(nodes)
       .force(
@@ -77,7 +86,16 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
           .distance(180)
       )
       .force("charge", d3.forceManyBody().strength(-90))
-      .force("center", d3.forceCenter(width / 2, height / 2));
+      // Custom force to attract nodes to their group centers
+      .force("group", (alpha) => {
+        nodes.forEach((node) => {
+          const center = groupPositions[node.group];
+          if (center) {
+            node.vx = (node.vx || 0) + (center.x - (node.x || 0)) * alpha * 0.1;
+            node.vy = (node.vy || 0) + (center.y - (node.y || 0)) * alpha * 0.1;
+          }
+        });
+      });
 
     const link = svg
       .append("g")
