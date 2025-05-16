@@ -64,7 +64,7 @@ function connectFullyWithinBucket(bucket: Node[]): void {
 
 Object.values(buckets).forEach(connectFullyWithinBucket);
 
-export const graphData: GraphData = {
+const graphData: GraphData = {
   nodes,
   links,
 };
@@ -76,20 +76,95 @@ const victorMono = Victor_Mono({
 
 export default function Home() {
   return (
-    <div className="flex h-screen">
-      <div className="flex flex-col justify-center items-end px-20 border-r border-black w-1/2 h-3/4 self-center">
-        <p className="text-vertical text-right transform origin-bottom-left">
-          <span className={`${victorMono.className} text-[80px] leading-none`}>
-            HENRY
-          </span>
-          <br />
-          <span className={`${victorMono.className} text-[80px] leading-none`}>
-            PEARSON
-          </span>
-        </p>
+    <div className="relative h-screen">
+      <div className="flex h-full">
+        <div className="flex flex-col justify-center items-end px-20 border-r border-black w-1/2 h-3/4 self-center">
+          <p className="text-vertical text-right transform origin-bottom-left">
+            <span
+              className={`${victorMono.className} text-[80px] leading-none`}
+            >
+              HENRY
+            </span>
+            <br />
+            <span
+              className={`${victorMono.className} text-[80px] leading-none`}
+            >
+              PEARSON
+            </span>
+          </p>
+        </div>
+        <div className="flex justify-center items-center w-1/2 h-full">
+          <ForceGraph nodes={graphData.nodes} links={graphData.links} />
+        </div>
       </div>
-      <div className="flex justify-center items-center w-1/2 h-full">
-        <ForceGraph nodes={graphData.nodes} links={graphData.links} />
+      <div className={`${victorMono.className} absolute top-0 left-0 p-4`}>
+        {new Date().toISOString()}
+      </div>
+
+      <div className={`${victorMono.className} absolute bottom-0 left-0 p-4`}>
+        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
+        <span
+          style={{
+            fontWeight: "bold",
+            verticalAlign: "middle",
+          }}
+        >
+          //&nbsp;
+        </span>
+        <span
+          style={{
+            textDecoration: "underline",
+            fontWeight: "bold",
+            verticalAlign: "middle",
+          }}
+        >
+          STATUS: ONLINE
+        </span>
+        <span className="inline-block ml-1 w-[1.2em] h-[1.2em] bg-green-400 align-middle" />
+        <span
+          className="inline-block w-[0.6em] h-[1.2em] align-middle"
+          style={{
+            backgroundImage: `
+            repeating-conic-gradient(
+        #05df72 0% 25%, 
+        transparent 0% 50%
+            )`,
+            backgroundSize: "4px 4px",
+          }}
+        />
+        <span
+          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-50"
+          style={{
+            backgroundImage: `
+            repeating-conic-gradient(
+        #05df72 0% 25%, 
+        transparent 0% 50%
+            )`,
+            backgroundSize: "4px 4px",
+          }}
+        />
+        <span
+          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-25"
+          style={{
+            backgroundImage: `
+            repeating-conic-gradient(
+        #05df72 0% 25%, 
+        transparent 0% 50%
+            )`,
+            backgroundSize: "4px 4px",
+          }}
+        />
+        <span
+          className="inline-block w-[0.6em] h-[1.2em] align-middle opacity-10"
+          style={{
+            backgroundImage: `
+          repeating-conic-gradient(
+      #05df72 0% 25%, 
+      transparent 0% 50%
+          )`,
+            backgroundSize: "4px 4px",
+          }}
+        />
       </div>
     </div>
   );
