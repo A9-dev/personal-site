@@ -32,13 +32,13 @@ const buckets: Record<string, Node[]> = {
     {
       id: 0,
       name: "JavaScript",
-      icon: "/icons/javascript.svg",
+      icon: "/icons/javascriptt.svg",
       group: "frontend",
     },
     {
       id: 1,
       name: "TypeScript",
-      icon: "/icons/typescript.svg",
+      icon: "/icons/typescriptt.svg",
       group: "frontend",
     },
     { id: 2, name: "Next.js", icon: "/icons/nextjs.svg", group: "frontend" },
