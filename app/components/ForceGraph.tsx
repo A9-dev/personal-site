@@ -32,6 +32,10 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
   const latestMousePos = useRef<{ x: number; y: number } | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
+  // Create a local copy of nodes for simulation and position initialization
+  const [simNodes, setSimNodes] = useState<Node[]>([]);
+  const [simLinks, setSimLinks] = useState<Link[]>([]);
+
   useEffect(() => {
     if (!wrapperRef.current) return;
 
@@ -46,8 +50,33 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     return () => resizeObserver.disconnect();
   }, []);
 
+  // Initialize simNodes and simLinks when nodes/links/dimensions change
   useEffect(() => {
-    if (!svgRef.current) return;
+    if (dimensions.width > 0 && dimensions.height > 0 && nodes.length > 0) {
+      // Deep copy nodes to avoid mutating props
+      const localNodes = nodes.map((node) => ({ ...node }));
+      // Group centers
+      const groupPositions: Record<string, { x: number; y: number }> = {
+        frontend: { x: dimensions.width * 0.25, y: dimensions.height * 0.25 },
+        backend: { x: dimensions.width * 0.75, y: dimensions.height * 0.25 },
+        devops: { x: dimensions.width * 0.25, y: dimensions.height * 0.75 },
+        tooling: { x: dimensions.width * 0.75, y: dimensions.height * 0.75 },
+      };
+      localNodes.forEach((node) => {
+        const center = groupPositions[node.group];
+        if (center) {
+          const randomOffset = () => (Math.random() - 0.5) * 100;
+          node.x = center.x + randomOffset();
+          node.y = center.y + randomOffset();
+        }
+      });
+      setSimNodes(localNodes);
+      setSimLinks(links.map((l) => ({ ...l })));
+    }
+  }, [nodes, links, dimensions]);
+
+  useEffect(() => {
+    if (!svgRef.current || simNodes.length === 0) return;
 
     const { width, height } = dimensions;
     const svg = d3.select(svgRef.current);
@@ -68,38 +97,25 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .style("font-size", "14px")
       .style("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
 
-    // Group centers
-    const groupPositions: Record<string, { x: number; y: number }> = {
-      frontend: { x: width * 0.25, y: height * 0.25 },
-      backend: { x: width * 0.75, y: height * 0.25 },
-      devops: { x: width * 0.25, y: height * 0.75 },
-      tooling: { x: width * 0.75, y: height * 0.75 },
-    };
-
-    // Initialize node positions around their group centers
-    nodes.forEach((node) => {
-      const center = groupPositions[node.group];
-      if (center) {
-        // Random offset from center (-50 to 50 pixels)
-        const randomOffset = () => (Math.random() - 0.5) * 100;
-        node.x = center.x + randomOffset();
-        node.y = center.y + randomOffset();
-      }
-    });
-
+    // Use simNodes and simLinks for simulation
     const simulation = d3
-      .forceSimulation<Node>(nodes)
+      .forceSimulation<Node>(simNodes)
       .force(
         "link",
         d3
-          .forceLink<Node, Link>(links)
+          .forceLink<Node, Link>(simLinks)
           .id((d) => d.id)
           .distance(180)
       )
       .force("charge", d3.forceManyBody().strength(-90))
-      // Custom force to attract nodes to their group centers
       .force("group", (alpha) => {
-        nodes.forEach((node) => {
+        simNodes.forEach((node) => {
+          const groupPositions: Record<string, { x: number; y: number }> = {
+            frontend: { x: width * 0.25, y: height * 0.25 },
+            backend: { x: width * 0.75, y: height * 0.25 },
+            devops: { x: width * 0.25, y: height * 0.75 },
+            tooling: { x: width * 0.75, y: height * 0.75 },
+          };
           const center = groupPositions[node.group];
           if (center) {
             node.vx = (node.vx || 0) + (center.x - (node.x || 0)) * alpha * 0.1;
@@ -113,7 +129,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .attr("stroke", "#999")
       .attr("stroke-opacity", 0.6)
       .selectAll("line")
-      .data(links)
+      .data(simLinks)
       .enter()
       .append("line")
       .attr("stroke-width", 2);
@@ -124,7 +140,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     const nodeGroup = svg
       .append("g")
       .selectAll("g")
-      .data(nodes)
+      .data(simNodes)
       .enter()
       .append("g")
       .on("mouseover", (event, d) => {
@@ -183,11 +199,10 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .attr("class", "tech-icon");
 
     simulation.on("tick", () => {
-      nodes.forEach((d) => {
+      simNodes.forEach((d) => {
         d.x = Math.max(nodeRadius, Math.min(width - nodeRadius, d.x!));
         d.y = Math.max(nodeRadius, Math.min(height - nodeRadius, d.y!));
       });
-
       link
         .attr("x1", (d) => {
           const dx = (d.target as Node).x! - (d.source as Node).x!;
@@ -217,7 +232,6 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
           const offsetY = (dy * nodeRadius) / dist;
           return (d.target as Node).y! + offsetY;
         });
-
       nodeGroup.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
@@ -259,7 +273,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     return () => {
       tooltip.remove();
     };
-  }, [nodes, links, dimensions]);
+  }, [simNodes, simLinks, dimensions]);
 
   return (
     <div
