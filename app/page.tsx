@@ -101,6 +101,7 @@ const graphData: GraphData = {
 
 export default function Home() {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -108,50 +109,81 @@ export default function Home() {
         width: window.innerWidth,
         height: window.innerHeight,
       });
+      setIsMobile(window.innerWidth <= 768); // Use 768px as mobile/tablet breakpoint
     };
-
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
-
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
   return (
-    <div className="relative h-screen">
-      <div className="flex h-full">
-        <div className="flex flex-col justify-center items-end px-20 border-r border-black w-1/2 h-3/4 self-center">
-          <p className="text-vertical text-right transform origin-bottom-left">
+    <div className="relative min-h-screen w-full bg-white overflow-x-hidden">
+      <div
+        className={`flex w-full h-full ${
+          isMobile ? "flex-col" : "flex-row items-center"
+        } transition-all duration-300`}
+        style={{ minHeight: "100vh" }}
+      >
+        <div
+          className={`flex flex-col justify-center items-end ${
+            isMobile
+              ? "w-full h-[28vh] border-b border-black px-4 items-center justify-end py-4"
+              : "w-1/2 h-auto border-r border-black px-20 self-center py-0"
+          } bg-white`}
+        >
+          <p
+            className={`text-vertical text-right transform origin-bottom-left ${
+              isMobile ? "text-center" : ""
+            }`}
+          >
             <span
-              className={`${victorMono.className} text-[80px] leading-none name-text inline-block`}
+              className={`${victorMono.className} ${
+                isMobile ? "text-[36px] sm:text-[48px]" : "text-[80px]"
+              } leading-none name-text inline-block`}
             >
               HENRY
             </span>
             <br />
             <span
-              className={`${victorMono.className} text-[80px] leading-none name-text inline-block`}
+              className={`${victorMono.className} ${
+                isMobile ? "text-[36px] sm:text-[48px]" : "text-[80px]"
+              } leading-none name-text inline-block`}
             >
               PEARSON
             </span>
           </p>
         </div>
-        <div className="flex justify-center items-center w-1/2 h-full">
-          <ForceGraph nodes={graphData.nodes} links={graphData.links} />
+        <div
+          className={`flex justify-center items-center ${
+            isMobile ? "w-full h-[60vh] min-h-[320px]" : "w-1/2 h-full"
+          } bg-white`}
+        >
+          <ForceGraph
+            nodes={graphData.nodes}
+            links={graphData.links}
+            isMobile={isMobile}
+          />
         </div>
       </div>
 
       <DateTime
-        className={`absolute top-0 left-0 p-4 ${victorMono.className}`}
+        className={`absolute top-0 left-0 p-2 sm:p-4 ${victorMono.className}`}
       />
 
       {/* PCB Line */}
-      <svg className="absolute bottom-0 left-0 w-full h-screen pointer-events-none">
+      <svg className="absolute bottom-0 left-0 w-full h-[120px] sm:h-screen pointer-events-none">
         <path
           d={`
-      M 0 ${dimensions.height - 90}
-      L 300 ${dimensions.height - 90}
-      Q 320 ${dimensions.height - 90} 330 ${dimensions.height - 70}
-      L 340 ${dimensions.height - 50}
-      Q 350 ${dimensions.height - 30} 370 ${dimensions.height - 30}
-      L ${dimensions.width} ${dimensions.height - 30}
+      M 0 ${dimensions.height - (isMobile ? 40 : 90)}
+      L 300 ${dimensions.height - (isMobile ? 40 : 90)}
+      Q 320 ${dimensions.height - (isMobile ? 40 : 90)} 330 ${
+            dimensions.height - (isMobile ? 20 : 70)
+          }
+      L 340 ${dimensions.height - (isMobile ? 0 : 50)}
+      Q 350 ${dimensions.height - (isMobile ? -20 : 30)} 370 ${
+            dimensions.height - (isMobile ? -20 : 30)
+          }
+      L ${dimensions.width} ${dimensions.height - (isMobile ? -20 : 30)}
           `}
           fill="none"
           stroke="#000000"
@@ -160,7 +192,9 @@ export default function Home() {
       </svg>
 
       {/* Status bar */}
-      <div className={`${victorMono.className} absolute bottom-5 left-0 p-4`}>
+      <div
+        className={`${victorMono.className} absolute bottom-2 left-0 p-2 w-full flex items-center text-xs sm:text-base`}
+      >
         <span style={{ fontWeight: "bold", verticalAlign: "middle" }}>
           {"//"}&nbsp;
         </span>

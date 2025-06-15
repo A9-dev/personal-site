@@ -24,9 +24,14 @@ interface Link {
 interface ForceGraphProps {
   nodes: Node[];
   links: Link[];
+  isMobile?: boolean;
 }
 
-const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
+const ForceGraph: React.FC<ForceGraphProps> = ({
+  nodes,
+  links,
+  isMobile = false,
+}) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const latestMousePos = useRef<{ x: number; y: number } | null>(null);
@@ -134,7 +139,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
       .append("line")
       .attr("stroke-width", 2);
 
-    const iconSize = 40;
+    const iconSize = isMobile ? 30 : 40;
     const nodeRadius = iconSize / 2 + 15;
     let hoverTimeout: NodeJS.Timeout | null = null;
     const nodeGroup = svg
@@ -273,7 +278,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({ nodes, links }) => {
     return () => {
       tooltip.remove();
     };
-  }, [simNodes, simLinks, dimensions]);
+  }, [simNodes, simLinks, dimensions, isMobile]);
 
   return (
     <div
