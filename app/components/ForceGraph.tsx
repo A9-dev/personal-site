@@ -67,12 +67,25 @@ const ForceGraph: React.FC<ForceGraphProps> = ({
         devops: { x: dimensions.width * 0.25, y: dimensions.height * 0.75 },
         tooling: { x: dimensions.width * 0.75, y: dimensions.height * 0.75 },
       };
+      // Place nodes in a circle around their group center to avoid overlap and big movement
+      const groupCounts: Record<string, number> = {};
+      nodes.forEach((node) => {
+        groupCounts[node.group] = (groupCounts[node.group] || 0) + 1;
+      });
+      const groupAngles: Record<string, number> = {};
+      Object.keys(groupCounts).forEach((group) => {
+        groupAngles[group] = 0;
+      });
+      const groupRadius = 60; // radius for initial circle spawn
       localNodes.forEach((node) => {
         const center = groupPositions[node.group];
         if (center) {
-          const randomOffset = () => (Math.random() - 0.5) * 100;
-          node.x = center.x + randomOffset();
-          node.y = center.y + randomOffset();
+          const count = groupCounts[node.group];
+          const angle = groupAngles[node.group];
+          const step = (2 * Math.PI) / count;
+          node.x = center.x + groupRadius * Math.cos(angle);
+          node.y = center.y + groupRadius * Math.sin(angle);
+          groupAngles[node.group] += step;
         }
       });
       setSimNodes(localNodes);
@@ -291,23 +304,6 @@ const ForceGraph: React.FC<ForceGraphProps> = ({
         height={dimensions.height}
         style={{ display: "block" }}
       />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "#f8f8f8",
-          animation: "fadeOutCover 0.5s ease-out forwards",
-          animationDelay: "0.5s",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="loading-text">TECH LOADING...</div>
-      </div>
     </div>
   );
 };
