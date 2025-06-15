@@ -35,7 +35,7 @@ const ForceGraph: React.FC<ForceGraphProps> = ({
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const latestMousePos = useRef<{ x: number; y: number } | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [dimensions, setDimensions] = useState({ width: 800, height: 800 });
 
   // Create a local copy of nodes for simulation and position initialization
   const [simNodes, setSimNodes] = useState<Node[]>([]);
@@ -44,15 +44,26 @@ const ForceGraph: React.FC<ForceGraphProps> = ({
   useEffect(() => {
     if (!wrapperRef.current) return;
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
+    // Set initial dimensions based on the wrapper's bounding box
+    const setWrapperDimensions = () => {
+      if (wrapperRef.current) {
+        const { width, height } = wrapperRef.current.getBoundingClientRect();
         setDimensions({ width, height });
       }
+    };
+    setWrapperDimensions();
+
+    const resizeObserver = new ResizeObserver(() => {
+      setWrapperDimensions();
     });
 
     resizeObserver.observe(wrapperRef.current);
-    return () => resizeObserver.disconnect();
+    window.addEventListener("resize", setWrapperDimensions);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", setWrapperDimensions);
+    };
   }, []);
 
   // Initialize simNodes and simLinks when nodes/links/dimensions change
