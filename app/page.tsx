@@ -58,7 +58,7 @@ export default function Home() {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-all cursor-pointer hover:translate-x-4"
               >
                 <div className={`text-sm font-bold`}>{project.id}</div>
                 <div className="text-xs text-gray-600 mt-1">{project.tech}</div>
