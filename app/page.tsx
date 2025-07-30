@@ -9,8 +9,8 @@ const victorMono = Victor_Mono({
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full bg-white overflow-x-hidden">
-      <div className="flex w-full h-full flex-row items-center transition-all duration-300 min-h-screen">
-        <div className="flex flex-col justify-center items-end w-1/2 h-auto  px-20 self-center py-0 bg-white">
+      <div className="flex w-full h-full flex-row items-center min-h-screen">
+        <div className="flex flex-col justify-center items-end w-1/2 h-auto  px-20 self-center bg-white">
           <p className="text-vertical text-right transform origin-bottom-left">
             <span
               className={`${victorMono.className} text-[80px] leading-none name-text inline-block tracking-wide`}
