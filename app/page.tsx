@@ -7,10 +7,38 @@ const victorMono = Victor_Mono({
 });
 
 export default function Home() {
+  const projects = [
+    {
+      id: "001_EVENT_SCHEDULER",
+      tech: "Next.js • tRPC • PostgreSQL • Docker",
+      desc: "A full-stack application for managing and coordinating events. Features include real-time updates, user authentication, and a robust API for third-party integrations.",
+    },
+    {
+      id: "002_FINANCIAL_DASHBOARD",
+      tech: "React • Node.js • GraphQL • MongoDB • AWS Lambda",
+      desc: "A real-time financial data visualization platform. It aggregates data from multiple sources, uses GraphQL for efficient data fetching, and leverages serverless functions for scalability.",
+    },
+    {
+      id: "003_ECOMMERCE_MICROSERVICES",
+      tech: "Spring Boot • Kafka • Kubernetes • PostgreSQL • Redis",
+      desc: "A high-availability e-commerce platform built on a microservices architecture. It uses Kafka for inter-service communication, Kubernetes for container orchestration, and Redis for a high-speed caching layer.",
+    },
+    {
+      id: "004_AI_POWERED_CHATBOT",
+      tech: "Python • TensorFlow • FastAPI • Docker • GCP",
+      desc: "A machine learning-powered chatbot service. The backend is built with FastAPI for fast and easy deployment, with the entire system containerized for portability and hosted on the Google Cloud Platform.",
+    },
+    {
+      id: "005_REAL_TIME_COLLABORATION",
+      tech: "SvelteKit • WebSockets • Go • Redis • NATS",
+      desc: "A real-time document collaboration tool, similar to Google Docs. It uses WebSockets for instant updates, a Go backend for high performance, and NATS for a scalable messaging system.",
+    },
+  ];
+
   return (
     <div className="relative min-h-screen w-full bg-white overflow-x-hidden">
       <div className="flex w-full h-full flex-row items-center min-h-screen">
-        <div className="flex flex-col justify-center items-end w-1/2 h-auto  px-20 self-center bg-white">
+        <div className="flex flex-col justify-center items-end w-1/2 h-auto px-20 self-center bg-white">
           <p className="text-vertical text-right transform origin-bottom-left">
             <span
               className={`${victorMono.className} text-[80px] leading-none name-text inline-block tracking-wide`}
@@ -27,67 +55,16 @@ export default function Home() {
         </div>
         <div className="flex justify-center items-center w-1/2 h-full bg-white">
           <div className="w-full max-w-md space-y-1">
-            {/* Project Cards */}
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>001_TASK_MANAGER</div>
-              <div className="text-xs text-gray-600 mt-1">
-                REACT • NODE.JS • POSTGRESQL
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <div className={`text-sm font-bold`}>{project.id}</div>
+                <div className="text-xs text-gray-600 mt-1">{project.tech}</div>
+                <div className="text-xs text-gray-500">{project.desc}</div>
               </div>
-              <div className="text-xs text-gray-500">
-                FULL-STACK PRODUCTIVITY APP
-              </div>
-            </div>
-
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>002_CHAT_SYSTEM</div>
-              <div className="text-xs text-gray-600 mt-1">
-                NEXT.JS • WEBSOCKETS • REDIS
-              </div>
-              <div className="text-xs text-gray-500">
-                REAL-TIME MESSAGING PLATFORM
-              </div>
-            </div>
-
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>003_API_GATEWAY</div>
-              <div className="text-xs text-gray-600 mt-1">
-                EXPRESS • DOCKER • KUBERNETES
-              </div>
-              <div className="text-xs text-gray-500">
-                MICROSERVICES ORCHESTRATION
-              </div>
-            </div>
-
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>004_DATA_VISUALIZER</div>
-              <div className="text-xs text-gray-600 mt-1">
-                D3.JS • PYTHON • MONGODB
-              </div>
-              <div className="text-xs text-gray-500">
-                INTERACTIVE ANALYTICS DASHBOARD
-              </div>
-            </div>
-
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>005_BLOCKCHAIN_TRACKER</div>
-              <div className="text-xs text-gray-600 mt-1">
-                RUST • ETHEREUM • GRAPHQL
-              </div>
-              <div className="text-xs text-gray-500">
-                CRYPTO TRANSACTION MONITOR
-              </div>
-            </div>
-
-            <div className="border-l-2 border-black pl-4 py-2 hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className={`text-sm font-bold`}>006_ML_PIPELINE</div>
-              <div className="text-xs text-gray-600 mt-1">
-                TENSORFLOW • FASTAPI • AWS
-              </div>
-              <div className="text-xs text-gray-500">
-                AUTOMATED MODEL DEPLOYMENT
-              </div>
-            </div>
-
+            ))}
             <div className="mt-4 pt-2 border-t border-gray-200">
               <div className={`text-xs text-gray-400`}>
                 {"// SCROLL FOR MORE PROJECTS"}
@@ -96,10 +73,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       <DateTime className={`absolute top-0 left-0 p-2 sm:p-4`} />
-
-      {/* Status bar */}
       <div
         className={`${victorMono.className} absolute bottom-4 left-4 p-2 w-full flex items-center text-xs sm:text-base`}
       >
